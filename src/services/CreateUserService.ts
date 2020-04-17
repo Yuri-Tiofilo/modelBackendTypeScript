@@ -16,7 +16,7 @@ class CreateUserService {
     });
 
     if (userExist) {
-      throw Error('User exists in database');
+      throw new Error('User exists in database');
     }
 
     const user = usersRepository.create({
