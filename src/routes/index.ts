@@ -5,18 +5,6 @@ import usersRouter from './users.routes';
 const routes = Router();
 
 routes.use('/appointments', appointmentsRouter);
-
-routes.post('/users', (request, response) => {
-  console.log(request);
-
-  const { name, email } = request.body;
-
-  const user = {
-    name,
-    email,
-  };
-
-  return response.json(request.body);
-});
+routes.use('/users', usersRouter);
 
 export default routes;

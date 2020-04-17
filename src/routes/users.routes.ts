@@ -1,13 +1,29 @@
 import { Router } from 'express';
 
-const usersRouter = Router();
+import CreateUserService from '../services/CreateUserService';
 
-usersRouter.get('/', (req, res) => {
-  return res.json({ ok: true });
+const UserRouter = Router();
+
+UserRouter.get('/', async (request, response) => {
+  return response.send({ ok: true });
 });
 
-usersRouter.post('/createUser', (req, res) => {
-  return res.json({ ok: true });
+UserRouter.post('/', async (request, response) => {
+  try {
+    const { name, email, password } = request.body;
+
+    const createUser = new CreateUserService();
+
+    const user = createUser.execute({
+      name,
+      email,
+      password,
+    });
+
+    return response.json(user);
+  } catch (err) {
+    return response.status(400).json({ error: err.message });
+  }
 });
 
-export default usersRouter;
+export default UserRouter;
