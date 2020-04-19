@@ -1,12 +1,17 @@
 import { Router } from 'express';
-
 import { getCustomRepository } from 'typeorm';
+import multer from 'multer';
+import uploadConfig from '../config/upload';
+
 import CreateUserService from '../services/CreateUserService';
+import UpdateUserService from '../services/UpdateUserService';
 import UserRepository from '../repositories/UserRepositories';
 
+import auth from '../middlewares/auth';
 // import UserController from '../controllers/UserController';
 
 const UserRouter = Router();
+const upload = multer(uploadConfig);
 
 UserRouter.get('/', async (request, response) => {
   const userRepositories = getCustomRepository(UserRepository);
@@ -54,6 +59,26 @@ UserRouter.delete('/:id', async (request, response) => {
   return response.json({ message: 'User deleted' });
 });
 
-// UserRouter.delete('/:id', UserController.delete);
+UserRouter.patch(
+  '/avatar',
+  auth,
+  upload.single('avatar'),
+  async (request, response) => {
+    try {
+      const uploadUserAvatar = new UpdateUserService();
+
+      const user = await uploadUserAvatar.execute({
+        user_id: request.user.id,
+        avatarFilename: request.file.filename,
+      });
+
+      delete user.password;
+
+      return response.json(user);
+    } catch (err) {
+      return response.status(400).json({ error: err.message });
+    }
+  },
+);
 
 export default UserRouter;
