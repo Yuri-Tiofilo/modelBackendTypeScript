@@ -3,6 +3,7 @@ import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import User from '../models/User';
 import AuthConfig from '../config/auth';
+import AppError from '../errors/appError';
 
 interface Request {
   email: string;
@@ -22,13 +23,13 @@ class AuthenticationUserService {
     });
 
     if (!user) {
-      throw new Error('Icorrect email or password combination');
+      throw new AppError('Icorrect email or password combination', 401);
     }
 
     const passwordMatched = await compare(password, user.password);
 
     if (!passwordMatched) {
-      throw new Error('Icorrect email or password combination');
+      throw new AppError('Icorrect email or password combination', 401);
     }
 
     const { expiresIn, secret } = AuthConfig.jwt;
