@@ -1,14 +1,13 @@
 import { Router } from 'express';
 import { getCustomRepository } from 'typeorm';
 import multer from 'multer';
-import uploadConfig from '../config/upload';
+import CreateUserService from '@modules/users/services/CreateUserService';
+import uploadConfig from '@config/upload';
 
-import CreateUserService from '../services/CreateUserService';
-import UpdateUserService from '../services/UpdateUserService';
-import UserRepository from '../repositories/UserRepositories';
+import UpdateUserService from '@modules/users/services/UpdateUserService';
+import UserRepository from '@modules/users/repositories/UserRepositories';
 
-import auth from '../middlewares/auth';
-// import UserController from '../controllers/UserController';
+import auth from '@modules/users/infra/http/middlewares/auth';
 
 const UserRouter = Router();
 const upload = multer(uploadConfig);

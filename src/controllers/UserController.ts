@@ -1,7 +1,7 @@
 import { Response, Request } from 'express';
 import { getCustomRepository } from 'typeorm';
-import User from '../models/User';
-import UserRepository from '../repositories/UserRepositories';
+import UserRepository from '@modules/users/repositories/UserRepositories';
+import User from '../modules/users/infra/typeorm/entities/User';
 
 class UserController {
   public async delete(req: Request, res: Response): Promise<void> {

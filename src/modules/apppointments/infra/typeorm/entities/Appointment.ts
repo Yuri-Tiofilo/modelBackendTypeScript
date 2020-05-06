@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 // este  arquivo serve para descrever um agendamento. Sempre quando for utilizar
-import User from './User';
+import User from '@modules/users/infra/typeorm/entities/User';
 
 @Entity('appointments')
 class Appointment {
