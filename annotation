@@ -1,0 +1,14 @@
+SOLID
+
+S -> Single Responsability Principle
+
+O -> Open Closed Principle
+
+L -> Liskov Substituion Principle
+
+I -> Interface Segregration Priciple
+
+D -> Dependency Invertion Principle
+
+Testes automzatizado
+

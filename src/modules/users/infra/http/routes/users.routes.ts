@@ -1,29 +1,31 @@
 import { Router } from 'express';
-import { getCustomRepository } from 'typeorm';
+
 import multer from 'multer';
 import CreateUserService from '@modules/users/services/CreateUserService';
 import uploadConfig from '@config/upload';
 
 import UpdateUserService from '@modules/users/services/UpdateUserService';
-import UserRepository from '@modules/users/repositories/UserRepositories';
+import UsersRepository from '@modules/users/infra/typeorm/repositories/UserRepositories';
 
 import auth from '@modules/users/infra/http/middlewares/auth';
 
 const UserRouter = Router();
 const upload = multer(uploadConfig);
 
-UserRouter.get('/', async (request, response) => {
-  const userRepositories = getCustomRepository(UserRepository);
+const usersRepository = new UsersRepository();
 
-  const users = await userRepositories.find();
+// UserRouter.get('/', async (request, response) => {
+//   const userRepositories = getCustomRepository(UserRepository);
 
-  return response.json(users);
-});
+//   const users = await userRepositories.find();
+
+//   return response.json(users);
+// });
 
 UserRouter.post('/', async (request, response) => {
   const { name, email, password } = request.body;
 
-  const createUser = new CreateUserService();
+  const createUser = new CreateUserService(usersRepository);
 
   const user = await createUser.execute({
     name,
@@ -36,30 +38,30 @@ UserRouter.post('/', async (request, response) => {
   return response.json(user);
 });
 
-UserRouter.delete('/:id', async (request, response) => {
-  const { id } = request.params;
+// UserRouter.delete('/:id', async (request, response) => {
+//   const { id } = request.params;
 
-  const userRepositories = getCustomRepository(UserRepository);
+//   const userRepositories = getCustomRepository(UserRepository);
 
-  const user = await userRepositories.findOne({
-    where: { id },
-  });
+//   const user = await userRepositories.findOne({
+//     where: { id },
+//   });
 
-  if (!user) {
-    return response.status(401).json({ message: 'User not exist' });
-  }
+//   if (!user) {
+//     return response.status(401).json({ message: 'User not exist' });
+//   }
 
-  await userRepositories.delete(user.id);
+//   await userRepositories.delete(user.id);
 
-  return response.json({ message: 'User deleted' });
-});
+//   return response.json({ message: 'User deleted' });
+// });
 
 UserRouter.patch(
   '/avatar',
   auth,
   upload.single('avatar'),
   async (request, response) => {
-    const uploadUserAvatar = new UpdateUserService();
+    const uploadUserAvatar = new UpdateUserService(usersRepository);
 
     const user = await uploadUserAvatar.execute({
       user_id: request.user.id,
