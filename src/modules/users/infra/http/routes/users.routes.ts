@@ -12,8 +12,6 @@ import auth from '@modules/users/infra/http/middlewares/auth';
 const UserRouter = Router();
 const upload = multer(uploadConfig);
 
-const usersRepository = new UsersRepository();
-
 // UserRouter.get('/', async (request, response) => {
 //   const userRepositories = getCustomRepository(UserRepository);
 
@@ -24,6 +22,8 @@ const usersRepository = new UsersRepository();
 
 UserRouter.post('/', async (request, response) => {
   const { name, email, password } = request.body;
+
+  const usersRepository = new UsersRepository();
 
   const createUser = new CreateUserService(usersRepository);
 
@@ -61,6 +61,8 @@ UserRouter.patch(
   auth,
   upload.single('avatar'),
   async (request, response) => {
+    const usersRepository = new UsersRepository();
+
     const uploadUserAvatar = new UpdateUserService(usersRepository);
 
     const user = await uploadUserAvatar.execute({
